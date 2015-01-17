@@ -4,7 +4,6 @@ from flask import render_template, request
 from microsofttranslator import Translator
 
 from Wordpedia import app
-from Wordpedia import mysql
 
 import json
 import urllib
