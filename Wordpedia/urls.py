@@ -1,6 +1,5 @@
 from flask import Flask
 from flask import render_template, request
-from flask import jsonify
 
 from microsoft import Translator
 from apiclient.discovery import build
@@ -8,7 +7,6 @@ from apiclient.discovery import build
 from Wordpedia import app
 
 import json
-import urllib
 
 t = Translator('Wordpedia', 'f1wB2fFCQMVoKPTFqPxMwO79Qxg816xYE7Y5eNF4lBk=')
 s = build('translate', 'v2', developerKey='AIzaSyBBvoBtHDYC4iUH-V5gVQ58DnaUTaMwbe4')
@@ -17,17 +15,13 @@ s = build('translate', 'v2', developerKey='AIzaSyBBvoBtHDYC4iUH-V5gVQ58DnaUTaMwb
 def helloworld():
 	return 'Hello World!'
 
-#@app.route('/translate')
-#def translate():
-#	return translator.translate('hello', 'ko')
-
-@app.route('/translate/<path:to_lang>', methods=['GET'])
-def translates(to_lang):
+'''@app.route('/translate/<path:to_lang>', methods=['GET'])
+def translate(to_lang):
 	resultDic = {}
 	# translation(to_lang, request.values.getlist('w'))
-	for fromText in request.values.getlist('w'):
-		resultDic[fromText] = translator.translate(fromText, to_lang, translator.detect_language(fromText))
-	return json.dumps(resultDic, ensure_ascii=False)
+	for item in request.values.getlist('w'):
+		resultDic[item] = translator.translate(item, to_lang)
+	return json.dumps(resultDic, ensure_ascii=False)'''
 
 @app.route('/translate/<path:company>/<path:to_lang>', methods=['GET'])
 def test(company, to_lang):
@@ -41,7 +35,6 @@ def test(company, to_lang):
 			resultDic[item] = t.getTranslations(item, to_lang)
 
 	return json.dumps(resultDic, ensure_ascii=False)
-
 
 '''Translate Language Code
 http://msdn.microsoft.com/en-us/library/hh456380.aspx
