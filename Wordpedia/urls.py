@@ -15,7 +15,7 @@ s = build('translate', 'v2', developerKey='AIzaSyBBvoBtHDYC4iUH-V5gVQ58DnaUTaMwb
 def helloworld():
 	return 'Hello World!'
 
-@app.route('/translate/<path:company>/<path:to_lang>', methods=['GET'])
+@app.route('/translate/<path:company>/<path:to_lang>', methods=['GET', 'POST'])
 def test(company, to_lang):
 	resultDic = {}
 	if company == 'g':
