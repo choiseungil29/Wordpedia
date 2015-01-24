@@ -15,14 +15,6 @@ s = build('translate', 'v2', developerKey='AIzaSyBBvoBtHDYC4iUH-V5gVQ58DnaUTaMwb
 def helloworld():
 	return 'Hello World!'
 
-'''@app.route('/translate/<path:to_lang>', methods=['GET'])
-def translate(to_lang):
-	resultDic = {}
-	# translation(to_lang, request.values.getlist('w'))
-	for item in request.values.getlist('w'):
-		resultDic[item] = translator.translate(item, to_lang)
-	return json.dumps(resultDic, ensure_ascii=False)'''
-
 @app.route('/translate/<path:company>/<path:to_lang>', methods=['GET'])
 def test(company, to_lang):
 	resultDic = {}
