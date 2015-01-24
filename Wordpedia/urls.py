@@ -1,5 +1,6 @@
 from flask import Flask
 from flask import render_template, request
+from flask import jsonify
 
 from microsoft import Translator
 from apiclient.discovery import build
