@@ -1,1 +1,1 @@
-web: gunicorn Wordpedia:app
+web: gunicorn wordpedia:app
