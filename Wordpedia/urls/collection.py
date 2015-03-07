@@ -19,27 +19,49 @@ t = Translator('Wordpedia', 'f1wB2fFCQMVoKPTFqPxMwO79Qxg816xYE7Y5eNF4lBk=')
 
 @app.route('/collection/create', methods=['GET', 'POST'])
 def create():
-	'''
+	"""
 	params:
 	requst
 	 w : word list.
 	 to : language code that want to return
 	headers
 	 token : user token
-	'''
+	"""
+	
 	try:
-		collection = createCollection(request.values.getlist('w'), request.args.get('to'))
-		addCollectionToUser(request.headers.get('token'), collection)
+		token = request.headers.get('token')
+		collection = createCollection(request.values.getlist('w'), request.args['to'])
+		addCollectionToUser(token, collection)
 	except ValueError, e:
 		return 'error. failed create collection'
+	except:
+		return token
 
 	session.commit()
-
 	return json.dumps(collection.words, ensure_ascii=False)
+
+@app.route('/collection/copy')
+def copy():
+	"""
+	다른 유저에게 collection id값을 복사해준다.
+	"""
+
+	try:
+		token = request.headers.get('token')
+		User.tokenCheck(token)
+	except:
+		return 'error.'
+
+	collectionId = request.args['colId']
+	userToken = request.args['token']
+
+	user = session.query(User).filter_by(token=token).first()
+	if user is None:
+		raise ValueError
+
 
 def createCollection(words, toLanguage):
 	result = {}
-
 	collection = Collection()
 
 	data = t.translate_array(words, toLanguage)
@@ -76,8 +98,6 @@ def createCollection(words, toLanguage):
 
 def addCollectionToUser(token, collection):
 	user = session.query(User).filter_by(token=token).first()
-	if user is None:
-		raise ValueError
 
 	user.collections.append(collection)
 	session.flush()

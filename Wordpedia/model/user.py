@@ -23,3 +23,9 @@ class User(db.Model):
 
 	def __repr__(self):
 		return '<id {}>'.format(self.id)
+
+	def tokenCheck(token):
+		try:
+			session.query(User).filter_by(token=token).one()
+		except:
+			raise ValueError

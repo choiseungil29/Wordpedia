@@ -18,10 +18,12 @@ def login():
 	password = request.args.get('pw')
 	result = {}
 
-	query = db.session.query(User).filter(User.userId == id)
+	query = db.session.query(User).filter_by(userId=id)
 
 	try:
 		user = query.one()
+		if user.pw != password:
+			raise Exception
 	except NoResultFound, e:
 		result['requestCode'] = -1
 		result['requestMessage'] = u'존재하지 않는 ID입니다'
@@ -30,6 +32,8 @@ def login():
 		result['requestCode'] = -2
 		result['requestMessage'] = u'잘못 만들어진 ID입니다.'
 		return json.dumps(result, ensure_ascii=False)
+	except:
+		return '비밀번호가 다릅니다'
 
 	result['requestCode'] = 1
 	result['resultMessage'] = u'로그인에 성공했습니다.'
@@ -42,7 +46,7 @@ def login():
 def logout():
 	pass
 
-@app.route('/signup', methods=['POST', 'GET'])
+@app.route('/signup', methods=['POST'])
 def signup():
 	id = request.args['id']
 	pw = request.args['pw']
@@ -51,7 +55,7 @@ def signup():
 
 	result = {}
 
-	if db.session.query(User).filter(User.userId == id).count() > 0:
+	if db.session.query(User).filter_by(userId=id).count() > 0:
 		result['requestCode'] = -1
 		result['requestMessage'] = u'이미 존재하는 ID입니다.'
 		return json.dumps(result, ensure_ascii=False)
@@ -71,3 +75,9 @@ def signup():
 	result['token'] = user.token
 
 	return json.dumps(result, ensure_ascii=False)
+
+
+
+
+
+	

@@ -15,12 +15,14 @@ class Collection(db.Model):
 	fromLanguage = db.Column(postgresql.ARRAY(postgresql.TEXT))
 	toLanguage = db.Column(db.String)
 	user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+	comments = db.relationship('Comment', backref='collection', lazy='dynamic')
 
 	def __init__(self):
 		self.words = []
 		self.translatedWords = []
 		self.fromLanguage = []
 		self.refCount = 0
+		self.comments = []
 
 	def __repr__(self):
 		return '<id {}>'.format(self.id)

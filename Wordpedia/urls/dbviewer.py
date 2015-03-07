@@ -9,6 +9,7 @@ from wordpedia import session
 
 from wordpedia.model.word import Word
 from wordpedia.model.user import User
+from wordpedia.model.comment import Comment
 from wordpedia.model.collection import Collection
 
 import json
@@ -75,7 +76,7 @@ def collectionsOfUser():
 
 	user = session.query(User).filter_by(userId=id).first()
 	if user is None:
-		return
+		return 'failed'
 
 	result['id'] = user.id
 	result['token'] = user.token
