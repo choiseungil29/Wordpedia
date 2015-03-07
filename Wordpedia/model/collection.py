@@ -14,6 +14,7 @@ class Collection(db.Model):
 	refCount = db.Column(db.Integer)
 	fromLanguage = db.Column(postgresql.ARRAY(postgresql.TEXT))
 	toLanguage = db.Column(db.String)
+	user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
 	def __init__(self):
 		self.words = []

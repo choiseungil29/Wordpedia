@@ -54,15 +54,45 @@ def collections():
 
 	return json.dumps(result, ensure_ascii=False)
 
-@app.route('/view/db/user/info')
+@app.route('/view/user/info')
 def userInfo():
-	pass
+	id = request.args.get('id')
+	result = {}
 
-@app.route('/view/db/user/collection/all')
+	user = session.query(User).filter_by(id=id).first()
+	if user is None:
+		return 'invalid id'
+
+	result['id'] = user.id
+	result['token'] = user.token
+
+	return json.dumps(result)
+
+@app.route('/view/user/collections')
 def collectionsOfUser():
 	id = request.args.get('id')
-	result = []
-	pass
+	result = {}
+
+	user = session.query(User).filter_by(userId=id).first()
+	if user is None:
+		return
+
+	result['id'] = user.id
+	result['token'] = user.token
+	result['collections'] = []
+	for collection in user.collections.all():
+		item = {}
+		item['id'] = collection.id
+		item['refs'] = collection.refCount
+		item['from'] = collection.fromLanguage
+		item['to'] = collection.toLanguage
+		item['words'] = collection.words
+		item['translatedWords'] = collection.translatedWords
+		result['collections'].append(item)
+
+	return json.dumps(result, ensure_ascii=False)
+
+
 
 
 

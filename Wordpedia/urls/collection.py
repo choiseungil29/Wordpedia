@@ -24,17 +24,19 @@ def create():
 	requst
 	 w : word list.
 	 to : language code that want to return
-	header
+	headers
 	 token : user token
 	'''
 	try:
 		collection = createCollection(request.values.getlist('w'), request.args.get('to'))
-	except e:
+		addCollectionToUser(request.headers.get('token'), collection)
+	except ValueError, e:
 		return 'error. failed create collection'
 
-	addCollectionToUser(request.header.get('token'), collection)
+	session.commit()
 
 	return json.dumps(collection.words, ensure_ascii=False)
+
 def createCollection(words, toLanguage):
 	result = {}
 
@@ -58,7 +60,7 @@ def createCollection(words, toLanguage):
 		result[word.id] = {}
 		result[word.id]['translatedText'] = data[i]['TranslatedText']
 		result[word.id]['refCount'] = refs
-		session.commit()
+		session.flush()
 
 		collection.words.append(word.id)
 		collection.translatedWords.append(data[i]['TranslatedText'])
@@ -68,14 +70,19 @@ def createCollection(words, toLanguage):
 	collection.toLanguage = toLanguage
 
 	session.add(collection)
-	session.commit()
+	session.flush()
 
 	return collection
 
 def addCollectionToUser(token, collection):
-	user = session.query(User).filter(token=token)
-	user.collections.append(collection)
+	user = session.query(User).filter_by(token=token).first()
+	if user is None:
+		raise ValueError
 
+	user.collections.append(collection)
+	session.flush()
+
+	return user
 
 
 

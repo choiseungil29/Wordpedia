@@ -9,13 +9,14 @@ from wordpedia import db
 class User(db.Model):
 	__tablename__ = 'user'
 
-	id = db.Column(db.String(), primary_key=True)
+	userId = db.Column(db.String())
+	id = db.Column(db.Integer, primary_key=True)
 	pw = db.Column(db.String())
 	token = db.Column(db.String(), unique=True)
-	collections = db.Column(postgresql.ARRAY(postgresql.INTEGER))
+	collections = db.relationship('Collection', backref='user', lazy='dynamic')
 
 	def __init__(self, id, password):
-		self.id = id
+		self.userId = id
 		self.pw = password
 		self.token = str(binascii.hexlify(os.urandom(12)))
 		self.collections = []

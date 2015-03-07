@@ -18,7 +18,7 @@ def login():
 	password = request.args.get('pw')
 	result = {}
 
-	query = db.session.query(User).filter(User.id == id)
+	query = db.session.query(User).filter(User.userId == id)
 
 	try:
 		user = query.one()
@@ -33,7 +33,7 @@ def login():
 
 	result['requestCode'] = 1
 	result['resultMessage'] = u'로그인에 성공했습니다.'
-	result['id'] = user.id
+	result['id'] = user.userId
 	result['token'] = user.token
 
 	return json.dumps(result, ensure_ascii=False)
@@ -51,7 +51,7 @@ def signup():
 
 	result = {}
 
-	if db.session.query(User).filter(User.id == id).count() > 0:
+	if db.session.query(User).filter(User.userId == id).count() > 0:
 		result['requestCode'] = -1
 		result['requestMessage'] = u'이미 존재하는 ID입니다.'
 		return json.dumps(result, ensure_ascii=False)
@@ -66,7 +66,7 @@ def signup():
 
 	result['requestCode'] = 1
 	result['requestMessage'] = u'회원가입에 성공했습니다.'
-	result['id'] = user.id
+	result['id'] = user.userId
 	result['pw'] = user.pw
 	result['token'] = user.token
 
