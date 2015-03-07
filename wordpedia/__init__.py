@@ -9,6 +9,7 @@ db = SQLAlchemy(app)
 
 from wordpedia.model.word import Word
 from wordpedia.model.user import User
+from wordpedia.model.collection import Collection
 
 db.create_all()
 session = db.session

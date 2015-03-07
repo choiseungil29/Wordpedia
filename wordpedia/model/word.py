@@ -8,7 +8,7 @@ class Word(db.Model):
 	refCount = db.Column(postgresql.JSON)
 
 	def __init__(self, originalWord):
-		self.id = originalWord
+		self.id = unicode(originalWord)
 		self.refCount = {}
 
 	def __repr__(self):

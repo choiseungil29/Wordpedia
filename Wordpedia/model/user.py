@@ -18,6 +18,7 @@ class User(db.Model):
 		self.id = id
 		self.pw = password
 		self.token = str(binascii.hexlify(os.urandom(12)))
+		self.collections = []
 
 	def __repr__(self):
 		return '<id {}>'.format(self.id)
