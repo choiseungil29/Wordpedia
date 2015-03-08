@@ -36,9 +36,9 @@ def create():
 		return 'error. failed create collection'
 	except:
 		return token
-
 	session.commit()
-	return json.dumps(collection.words, ensure_ascii=False)
+
+	return collection.id
 
 @app.route('/collection/copy')
 def copy():
@@ -46,19 +46,19 @@ def copy():
 	다른 유저에게 collection id값을 복사해준다.
 	"""
 
-	try:
-		token = request.headers.get('token')
-		User.tokenCheck(token)
-	except:
-		return 'error.'
-
 	collectionId = request.args['colId']
-	userToken = request.args['token']
+	userToken = request.headers.get('token')
 
 	user = session.query(User).filter_by(token=token).first()
 	if user is None:
-		raise ValueError
+		return '존재하지 않는 user입니다'
 
+	collection = session.query(Collection).filter_by(id=collectionId).first()
+	if collection is None:
+		return '단어장이 존재하지 않습니다'
+
+	addCollectionToUser(userToken, collection)
+	return collection.id
 
 def createCollection(words, toLanguage):
 	result = {}

@@ -39,7 +39,26 @@ def words():
 
 	return json.dumps(result, ensure_ascii=False)
 
-@app.route('/view/db/collection/all')
+@app.route('/get/collection', methods=['POST', 'GET'])
+def collection():
+	id = request.args['collectionId']
+
+	result = {}
+
+	collection = session.query(Collection).filter_by(id=id).first()
+	if collection is None:
+		return '존재하지 않는 단어장입니다'
+
+	result['id'] = collection.id
+	result['refs'] = collection.refCount
+	result['from'] = collection.fromLanguage
+	result['to'] = collection.toLanguage
+	result['words'] = collection.words
+	result['translateWords'] = collection.translatedWords
+
+	return json.dumps(result, ensure_ascii=False)
+
+@app.route('/get/collection/all', methods=['POST', 'GET'])
 def collections():
 	result = []
 
@@ -52,6 +71,30 @@ def collections():
 		item['words'] = collection.words
 		item['translatedWords'] = collection.translatedWords
 		result.append(item)
+
+	return json.dumps(result, ensure_ascii=False)
+
+@app.route('/get/collection/user', methods=['POST', 'GET'])
+def collectionsOfUser():
+	token = request.headers['token']
+	result = {}
+
+	user = session.query(User).filter_by(token=token).first()
+	if user is None:
+		return '존재하지 않는 유저입니다'
+
+	result['id'] = user.id
+	result['token'] = user.token
+	result['collections'] = []
+	for collection in user.collections.all():
+		item = {}
+		item['id'] = collection.id
+		item['refs'] = collection.refCount
+		item['from'] = collection.fromLanguage
+		item['to'] = collection.toLanguage
+		item['words'] = collection.words
+		item['translatedWords'] = collection.translatedWords
+		result['collections'].append(item)
 
 	return json.dumps(result, ensure_ascii=False)
 
@@ -69,29 +112,6 @@ def userInfo():
 
 	return json.dumps(result)
 
-@app.route('/view/user/collections')
-def collectionsOfUser():
-	id = request.args.get('id')
-	result = {}
-
-	user = session.query(User).filter_by(userId=id).first()
-	if user is None:
-		return 'failed'
-
-	result['id'] = user.id
-	result['token'] = user.token
-	result['collections'] = []
-	for collection in user.collections.all():
-		item = {}
-		item['id'] = collection.id
-		item['refs'] = collection.refCount
-		item['from'] = collection.fromLanguage
-		item['to'] = collection.toLanguage
-		item['words'] = collection.words
-		item['translatedWords'] = collection.translatedWords
-		result['collections'].append(item)
-
-	return json.dumps(result, ensure_ascii=False)
 
 
 
