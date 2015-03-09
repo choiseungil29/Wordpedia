@@ -70,6 +70,8 @@ def collections():
 		item['to'] = collection.toLanguage
 		item['words'] = collection.words
 		item['translatedWords'] = collection.translatedWords
+		item['createDate'] = collection.createDate.strftime('%Y/%m/%d')
+		item['title'] = collection.title
 		result.append(item)
 
 	return json.dumps(result, ensure_ascii=False)

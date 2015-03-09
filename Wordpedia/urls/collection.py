@@ -28,9 +28,12 @@ def create():
 	 token : user token
 	"""
 	
+	if request.args['title'] is None:
+			return '타이틀이 존재하지 않습니다'
+			
 	try:
 		token = request.headers.get('token')
-		collection = createCollection(request.values.getlist('w'), request.args['to'])
+		collection = createCollection(request.values.getlist('w'), request.args['to'], request.args['title'])
 		addCollectionToUser(token, collection)
 	except ValueError, e:
 		return 'error. failed create collection'
@@ -38,7 +41,7 @@ def create():
 		return token
 	session.commit()
 
-	return collection.id
+	return json.dumps(collection.id)
 
 @app.route('/collection/copy')
 def copy():
@@ -58,11 +61,13 @@ def copy():
 		return '단어장이 존재하지 않습니다'
 
 	addCollectionToUser(userToken, collection)
-	return collection.id
+	return json.dumps(collection.id)
 
-def createCollection(words, toLanguage):
+def createCollection(words, toLanguage, title):
 	result = {}
 	collection = Collection()
+
+	collection.title = title
 
 	data = t.translate_array(words, toLanguage)
 	for i in range(0, len(words)):
