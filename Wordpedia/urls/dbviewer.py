@@ -28,7 +28,7 @@ def word():
 
 	return json.dumps(result, ensure_ascii=False)
 
-@app.route('/view/db/word/all')
+@app.route('/view/db/word/all', methods=['POST', 'GET'])
 def words():
 	result = []
 	for word in session.query(Word).all():

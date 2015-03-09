@@ -43,7 +43,7 @@ def create():
 
 	return json.dumps(collection.id)
 
-@app.route('/collection/copy')
+@app.route('/collection/copy', methods=['POST', 'GET'])
 def copy():
 	"""
 	다른 유저에게 collection id값을 복사해준다.
