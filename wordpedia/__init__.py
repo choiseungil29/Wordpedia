@@ -17,3 +17,7 @@ db.create_all()
 session = db.session
 
 from wordpedia import urls
+
+@app.route('/')
+def hello():
+	return 'Hello World!'

@@ -42,11 +42,11 @@ def login():
 
 	return json.dumps(result, ensure_ascii=False)
 
-@app.route('/logout', methods=['POST'])
+@app.route('/logout', methods=['POST', 'GET'])
 def logout():
 	pass
 
-@app.route('/signup', methods=['POST'])
+@app.route('/signup', methods=['GET', 'POST'])
 def signup():
 	id = request.args['id']
 	pw = request.args['pw']
