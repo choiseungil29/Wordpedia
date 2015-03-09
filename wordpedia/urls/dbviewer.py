@@ -55,6 +55,8 @@ def collection():
 	result['to'] = collection.toLanguage
 	result['words'] = collection.words
 	result['translateWords'] = collection.translatedWords
+	result['title'] = collection.title
+	result['createDate'] = collection.createDate.strftime('%Y/%m/%d')
 
 	return json.dumps(result, ensure_ascii=False)
 
@@ -96,6 +98,8 @@ def collectionsOfUser():
 		item['to'] = collection.toLanguage
 		item['words'] = collection.words
 		item['translatedWords'] = collection.translatedWords
+		item['createDate'] = collection.createDate.strftime('%Y/%m/%d')
+		item['title'] = collection.title
 		result['collections'].append(item)
 
 	return json.dumps(result, ensure_ascii=False)
