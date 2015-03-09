@@ -39,6 +39,29 @@ def login():
 	result['resultMessage'] = u'로그인에 성공했습니다.'
 	result['id'] = user.userId
 	result['token'] = user.token
+	
+	token = request.headers['token']
+	result = {}
+
+	user = session.query(User).filter_by(token=token).first()
+	if user is None:
+		return '존재하지 않는 유저입니다'
+		
+	result = []
+	result['id'] = user.id
+	result['token'] = user.token
+	result['collections'] = []
+	for collection in user.collections.all():
+		item = {}
+		item['id'] = collection.id
+		item['refs'] = collection.refCount
+		item['from'] = collection.fromLanguage
+		item['to'] = collection.toLanguage
+		item['words'] = collection.words
+		item['translatedWords'] = collection.translatedWords
+		item['createDate'] = collection.createDate.strftime('%Y/%m/%d')
+		item['title'] = collection.title
+		result['collections'].append(item)
 
 	return json.dumps(result, ensure_ascii=False)
 
