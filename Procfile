@@ -1,1 +1,1 @@
-web: gunicorn wordpedia:app
+web: gunicorn wordpedia:app --timeout 15
