@@ -33,7 +33,7 @@ def create():
 			
 	try:
 		token = request.headers.get('token')
-		collection = createCollection(request.values.getlist('w'), request.args['to'], request.args['title'])
+		collection = createCollection(request.values.getlist('w'), request.args['to'], request.args['title'], token)
 		addCollectionToUser(token, collection)
 	except ValueError, e:
 		return 'error. failed create collection'
@@ -63,7 +63,7 @@ def copy():
 	addCollectionToUser(userToken, collection)
 	return json.dumps(collection.id)
 
-def createCollection(words, toLanguage, title):
+def createCollection(words, toLanguage, title, token):
 	result = {}
 	collection = Collection()
 
@@ -92,6 +92,10 @@ def createCollection(words, toLanguage, title):
 		collection.words.append(word.id)
 		collection.translatedWords.append(data[i]['TranslatedText'])
 		collection.fromLanguage.append(data[i]['From'])
+
+		user = session.query(User).filter_by(token=token).first()
+		collection.creator = user.userId
+		collection.creator_token = token
 
 	collection.fromLanguage = list(set(collection.fromLanguage))
 	collection.toLanguage = toLanguage

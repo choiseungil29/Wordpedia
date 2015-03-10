@@ -22,6 +22,9 @@ class Collection(db.Model):
 	createDate = db.Column(db.DateTime, default=datetime.datetime.utcnow)
 	title = db.Column(db.String)
 
+	creator = db.Column(db.String)
+	creator_token = db.Column(db.String)
+
 
 	def __init__(self):
 		self.words = []

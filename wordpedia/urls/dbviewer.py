@@ -55,6 +55,10 @@ def collection():
 	result['to'] = collection.toLanguage
 	result['words'] = collection.words
 	result['translateWords'] = collection.translatedWords
+	result['createDate'] = collection.createDate.strftime('%Y/%m/%d')
+	result['title'] = collection.title
+	result['creatorToken'] = collection.creator_token
+	result['creator'] = collection.creator
 
 	return json.dumps(result, ensure_ascii=False)
 
@@ -72,6 +76,8 @@ def collections():
 		item['translatedWords'] = collection.translatedWords
 		item['createDate'] = collection.createDate.strftime('%Y/%m/%d')
 		item['title'] = collection.title
+		item['creatorToken'] = collection.creator_token
+		item['creator'] = collection.creator
 		result.append(item)
 
 	return json.dumps(result, ensure_ascii=False)
@@ -96,6 +102,10 @@ def collectionsOfUser():
 		item['to'] = collection.toLanguage
 		item['words'] = collection.words
 		item['translatedWords'] = collection.translatedWords
+		item['createDate'] = collection.createDate.strftime('%Y/%m/%d')
+		item['title'] = collection.title
+		item['creatorToken'] = collection.creator_token
+		item['creator'] = collection.creator
 		result['collections'].append(item)
 
 	return json.dumps(result, ensure_ascii=False)
