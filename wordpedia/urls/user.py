@@ -47,7 +47,7 @@ def login():
 	result['requestMessage'] = u'로그인에 성공했습니다.'
 	result['id'] = user.id
 	result['token'] = user.token
-	result['collections'] = []
+	"""result['collections'] = []
 	for collection in user.collections.all():
 		item = {}
 		item['id'] = collection.id
@@ -58,7 +58,7 @@ def login():
 		item['translatedWords'] = collection.translatedWords
 		item['createDate'] = collection.createDate.strftime('%Y/%m/%d')
 		item['title'] = collection.title
-		result['collections'].append(item)
+		result['collections'].append(item)"""
 
 	return json.dumps(result, ensure_ascii=False)
 
