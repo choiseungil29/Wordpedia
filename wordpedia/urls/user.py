@@ -3,7 +3,7 @@
 from flask import request, Response
 
 from wordpedia import app
-from wordpedia import db
+from wordpedia import session
 
 from wordpedia.model.user import User
 
@@ -18,7 +18,7 @@ def login():
 	password = request.args.get('pw')
 	result = {}
 
-	query = db.session.query(User).filter_by(userId=id)
+	query = session.query(User).filter_by(userId=id)
 
 	try:
 		user = query.one()
@@ -36,20 +36,15 @@ def login():
 		result['requestCode'] = -3
 		result['requestMessage'] = u'비밀번호가 다릅니다'
 		return json.dumps(result, ensure_ascii=False)
-
-	result['requestCode'] = 1
-	result['requestMessage'] = u'로그인에 성공했습니다.'
-	result['id'] = user.userId
-	result['token'] = user.token
 	
-	token = request.headers['token']
 	result = {}
 
-	user = session.query(User).filter_by(token=token).first()
+	user = session.query(User).filter_by(token=user.token).first()
 	if user is None:
 		return '존재하지 않는 유저입니다'
 		
-	result = []
+	result['requestCode'] = 1
+	result['requestMessage'] = u'로그인에 성공했습니다.'
 	result['id'] = user.id
 	result['token'] = user.token
 	result['collections'] = []
@@ -80,14 +75,14 @@ def signup():
 
 	result = {}
 
-	if db.session.query(User).filter_by(userId=id).count() > 0:
+	if session.query(User).filter_by(userId=id).count() > 0:
 		result['requestCode'] = -1
 		result['requestMessage'] = u'이미 존재하는 ID입니다.'
 		return json.dumps(result, ensure_ascii=False)
 
 	try:
-		db.session.add(user)
-		db.session.commit()
+		session.add(user)
+		session.commit()
 	except e:
 		result['requestCode'] = -1
 		result['requestMessage'] = u'잘못된 값입니다.'
