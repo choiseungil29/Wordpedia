@@ -33,10 +33,12 @@ def login():
 		result['requestMessage'] = u'잘못 만들어진 ID입니다.'
 		return json.dumps(result, ensure_ascii=False)
 	except:
-		return '비밀번호가 다릅니다'
+		result['requestCode'] = -3
+		result['requestMessage'] = u'비밀번호가 다릅니다'
+		return json.dumps(result, ensure_ascii=False)
 
 	result['requestCode'] = 1
-	result['resultMessage'] = u'로그인에 성공했습니다.'
+	result['requestMessage'] = u'로그인에 성공했습니다.'
 	result['id'] = user.userId
 	result['token'] = user.token
 	
