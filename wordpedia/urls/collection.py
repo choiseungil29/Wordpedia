@@ -41,7 +41,12 @@ def create():
 		return token
 	session.commit()
 
-	return json.dumps(collection.id)
+	result = {}
+	result['requestCode'] = 1
+	result['requestMessage'] = '단어장 생성에 성공하였습니다.'
+	result['collectionId'] = collection.id
+
+	return json.dumps(result, ensure_ascii=False)
 
 @app.route('/collection/copy', methods=['POST', 'GET'])
 def copy():
