@@ -71,6 +71,7 @@ def collectionsOfUser():
 		return '존재하지 않는 유저입니다'
 
 	result['id'] = user.id
+	result['userId'] = user.userId
 	result['token'] = user.token
 	result['collections'] = []
 	for collection in user.collections.all():
