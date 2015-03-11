@@ -121,7 +121,8 @@ def surf():
 
 		result.append(collection)
 
-	target = random.randInt(0, len(result)-1)
+	#target = random.randInt(0, len(result)-1)
+	target = len(result) - 2
 
 	return json.dumps(result[target].getCollection(), ensure_ascii=False)
 
