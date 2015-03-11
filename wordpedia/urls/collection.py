@@ -14,6 +14,7 @@ from wordpedia.model.word import Word
 from wordpedia.model.user import User
 
 import json
+import random
 
 t = Translator('Wordpedia', 'f1wB2fFCQMVoKPTFqPxMwO79Qxg816xYE7Y5eNF4lBk=')
 
@@ -108,6 +109,21 @@ def collectionsOfUser():
 		result['collections'].append(item)
 
 	return json.dumps(result, ensure_ascii=False)
+
+@app.route('/surf', methods=['POST', 'GET'])
+def surf():
+	token = request.headers['token']
+
+	result = []
+	for collection in session.query(Collection).all():
+		if collection.creator_token is token:
+			continue
+
+		result.append(collection)
+
+	target = random.randInt(0, len(result)-1)
+
+	return json.dumps(result[target].getCollection(), ensure_ascii=False)
 
 def createCollection(words, toLanguage, title, token):
 	result = {}
