@@ -38,12 +38,12 @@ class Collection(db.Model):
 	def __repr__(self):
 		return '<id {}>'.format(self.id)
 
-	def addToUser(token):
+	def addToUser(self, token):
 		user = db.session.query(User).filter_by(token=token).first()
 		user.collections.append(self)
 		db.session.flush()
 
-	def getCollection():
+	def getCollection(self):
 		result = {}
 		result['id'] = self.id
 		result['refs'] = self.refCount
@@ -72,4 +72,3 @@ class Collection(db.Model):
 
 
 
-		
