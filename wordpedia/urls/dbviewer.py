@@ -108,7 +108,6 @@ def setCollection(collection):
 	result['comments'] = []
 	for comment in collection.comments.all():
 		item = {}
-		item['word'] = comment.word_id
 		item['comment'] = comment.contents
 		item['creator'] = comment.creator
 		item['createDate'] = comment.createDate.strftime('%Y/%m/%d')

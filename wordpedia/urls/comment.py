@@ -18,18 +18,16 @@ import json
 
 @app.route('/comment/add', methods=['POST', 'GET'])
 def add():
-	targetWord = request.args['word']
 	targetCollectionId = request.args['collectionId']
 	content = request.args['comment']
 
 	result = {}
 
 	try:
-		session.query(Word).filter_by(id=targetWord).one()
 		session.query(Collection).filter_by(id=targetCollectionId).one()
 	except:
 		result['requestCode'] = -1
-		result['requestMessage'] = u'코멘트 작성을 실패했습니다. ' + targetWord
+		result['requestMessage'] = u'코멘트 작성을 실패했습니다.'
 		return json.dumps(result, ensure_ascii=False);
 
 	try:
@@ -42,7 +40,6 @@ def add():
 	comment = Comment()
 	comment.contents = content
 	comment.collection_id = targetCollectionId
-	comment.word_id = targetWord
 	comment.creator = user.userId
 	comment.creator_token = user.token
 

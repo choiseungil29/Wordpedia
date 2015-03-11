@@ -32,7 +32,6 @@ class Collection(db.Model):
 		self.fromLanguage = []
 		self.refCount = 0
 		self.comments = []
-		createDate = db.func.now()
 		title = None
 
 	def __repr__(self):
