@@ -34,7 +34,7 @@ def create():
 	try:
 		token = request.headers.get('token')
 		collection = createCollection(request.values.getlist('w'), request.args['to'], request.args['title'], token)
-		addCollectionToUser(token, collection)
+		collection.addToUser(token)
 	except ValueError, e:
 		return 'error. failed create collection'
 	except:
@@ -60,8 +60,49 @@ def copy():
 	if collection is None:
 		return '단어장이 존재하지 않습니다'
 
-	addCollectionToUser(userToken, collection)
+	collection.addToUser(userToken)
 	return json.dumps(collection.id)
+
+@app.route('/get/collection', methods=['POST', 'GET'])
+def collection():
+	id = request.args['collectionId']
+
+	collection = session.query(Collection).filter_by(id=id).first()
+	if collection is None:
+		return '존재하지 않는 단어장입니다'
+
+	result = collection.getCollection()
+
+	return json.dumps(result, ensure_ascii=False)
+
+@app.route('/get/collection/all', methods=['POST', 'GET'])
+def collections():
+	result = []
+
+	for collection in session.query(Collection).all():
+		item = collection.getCollection()
+		result.append(item)
+
+	return json.dumps(result, ensure_ascii=False)
+
+@app.route('/get/collection/user', methods=['POST', 'GET'])
+def collectionsOfUser():
+	token = request.headers['token']
+	result = {}
+
+	user = session.query(User).filter_by(token=token).first()
+	if user is None:
+		return '존재하지 않는 유저입니다'
+
+	result['id'] = user.id
+	result['userId'] = user.userId
+	result['token'] = user.token
+	result['collections'] = []
+	for collection in user.collections.all():
+		item = collection.getCollection()
+		result['collections'].append(item)
+
+	return json.dumps(result, ensure_ascii=False)
 
 def createCollection(words, toLanguage, title, token):
 	result = {}
@@ -104,17 +145,6 @@ def createCollection(words, toLanguage, title, token):
 	session.flush()
 
 	return collection
-
-def addCollectionToUser(token, collection):
-	user = session.query(User).filter_by(token=token).first()
-
-	user.collections.append(collection)
-	session.flush()
-
-	return user
-
-
-
 
 
 

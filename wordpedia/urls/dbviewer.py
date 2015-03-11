@@ -14,31 +14,6 @@ from wordpedia.model.collection import Collection
 
 import json
 
-@app.route('/view/db/word', methods=['GET', 'POST'])
-def word():
-	result = {}
-
-	try:
-		word = session.query(Word).filter(Word.id == request.args.get('w')).one()
-	except NoResultFound, e:
-		return '존재하지 않는 단어입니다.'
-
-	result['id'] = word.id
-	result['refCount'] = json.loads(str(word.refCount))
-
-	return json.dumps(result, ensure_ascii=False)
-
-@app.route('/view/db/word/all', methods=['POST', 'GET'])
-def words():
-	result = []
-	for word in session.query(Word).all():
-		item = {}
-		item['word'] = word.id
-		item['refs'] = json.loads(word.refCount)
-		result.append(item)
-
-	return json.dumps(result, ensure_ascii=False)
-
 @app.route('/get/collection', methods=['POST', 'GET'])
 def collection():
 	id = request.args['collectionId']
@@ -79,20 +54,6 @@ def collectionsOfUser():
 		result['collections'].append(item)
 
 	return json.dumps(result, ensure_ascii=False)
-
-@app.route('/view/user/info')
-def userInfo():
-	id = request.args.get('id')
-	result = {}
-
-	user = session.query(User).filter_by(id=id).first()
-	if user is None:
-		return 'invalid id'
-
-	result['id'] = user.id
-	result['token'] = user.token
-
-	return json.dumps(result)
 
 def setCollection(collection):
 	result = {}
