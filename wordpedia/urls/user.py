@@ -45,7 +45,7 @@ def login():
 		
 	result['requestCode'] = 1
 	result['requestMessage'] = u'로그인에 성공했습니다.'
-	result['id'] = user.id
+	result['id'] = user.userId
 	result['token'] = user.token
 	"""result['collections'] = []
 	for collection in user.collections.all():
