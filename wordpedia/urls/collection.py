@@ -55,8 +55,8 @@ def copy():
 	다른 유저에게 collection id값을 복사해준다.
 	"""
 
-	collectionId = request.args['colId']
-	userToken = request.headers.get('token')
+	collectionId = request.args['collectionId']
+	token = request.headers.get('token')
 
 	user = session.query(User).filter_by(token=token).first()
 	if user is None:
@@ -66,8 +66,13 @@ def copy():
 	if collection is None:
 		return '단어장이 존재하지 않습니다'
 
-	collection.addToUser(userToken)
-	return json.dumps(collection.id)
+	result = {}
+	result['requestCode'] = 1
+	result['requestMessage'] = '복사에 성공했습니다.'
+	result['collectionId'] = collection.id
+
+	collection.addToUser(token)
+	return json.dumps(result, ensure_ascii=False)
 
 @app.route('/get/collection', methods=['POST', 'GET'])
 def collection():
