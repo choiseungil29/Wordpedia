@@ -14,7 +14,8 @@ from wordpedia.model.word import Word
 from wordpedia.model.user import User
 
 import json
-import random
+
+from wordpedia.random import Random
 
 t = Translator('Wordpedia', 'f1wB2fFCQMVoKPTFqPxMwO79Qxg816xYE7Y5eNF4lBk=')
 
@@ -126,8 +127,9 @@ def surf():
 
 		result.append(collection)
 
-	#target = random.randInt(0, len(result)-1)
-	target = len(result) - 2
+	random = Random()
+	target = random.randrange(0, len(result))
+	#target = len(result) - 2
 
 	return json.dumps(result[target].getCollection(), ensure_ascii=False)
 
